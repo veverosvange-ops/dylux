@@ -6,7 +6,7 @@ import telebot
 app = Flask(__name__)
 
 # Konfigurasi Bot Telegram (Ganti dengan Token Bot kamu dari @BotFather)
-TELEGRAM_BOT_TOKEN = "MASUKKAN_TOKEN_BOT_TELEGRAM_DISINI"
+TELEGRAM_BOT_TOKEN = "8903996033:AAHn0_-0W6jHlcU7IvlCH-YuT3t2FcjujRU"
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 
 # Database Sederhana di Server
