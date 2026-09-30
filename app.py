@@ -4,7 +4,7 @@ import telebot
 app = Flask(__name__)
 
 # Token Bot Telegram kamu
-TELEGRAM_BOT_TOKEN = "8903996033:AAHn0_-0W6jHlcU7IvlCH-YuT3t2FcjujRU"
+TELEGRAM_BOT_TOKEN = "8903996033:AAHnO_-0W6jHlcU7IvlCH-YuT3t2FcjujRU"
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN, threaded=False)
 
 # Database Sederhana di Server
