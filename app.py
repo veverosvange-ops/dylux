@@ -3,18 +3,31 @@ import telebot
 
 app = Flask(__name__)
 
-# Token Bot Telegram kamu yang baru
 TELEGRAM_BOT_TOKEN = "8903996033:AAFjq32aNVAnRbPy-51ufNWGwIaxntKTVKo"
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN, threaded=False)
 
-# Database Sederhana di Server
+# Database Akun Terpusat di Server
 DATABASE_AKUN = {}
 
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({"status": "online", "service": "Dylux Telegram Webhook Engine"})
+    return jsonify({"status": "online", "service": "Dylux CarX Street Engine"})
 
-# Endpoint Webhook utama yang lebih aman
+# --- API ENDPOINT UNTUK KLIEN / GAME ---
+@app.route('/api/get_data', methods=['GET'])
+def get_user_data():
+    email = request.args.get('email')
+    if not email or email not in DATABASE_AKUN:
+        return jsonify({"status": "error", "message": "Akun tidak ditemukan di server!"}), 404
+    
+    return jsonify({
+        "status": "success",
+        "email": email,
+        "money": DATABASE_AKUN[email]["money"],
+        "gold": DATABASE_AKUN[email]["gold"]
+    })
+
+# --- ENDPOINT WEBHOOK TELEGRAM ---
 @app.route(f'/{TELEGRAM_BOT_TOKEN}', methods=['POST'])
 def webhook():
     if request.headers.get('content-type') == 'application/json':
@@ -29,8 +42,8 @@ def webhook():
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, 
-        "🤖 *Selamat datang di Dylux Bot!*\n\n"
-        "Gunakan perintah berikut untuk mulai:\n"
+        "🚗 *Dylux CarX Street Engine Active*\n\n"
+        "Gunakan perintah:\n"
         "`/inject <email> <jumlah_money>`\n"
         "Contoh: `/inject azizi177@gmail.com 5000000`", 
         parse_mode="Markdown"
@@ -53,10 +66,10 @@ def handle_telegram_inject(message):
         DATABASE_AKUN[email]["money"] += amount
         
         bot.reply_to(message, 
-            f"✅ *INJECT BERHASIL!*\n\n"
+            f"✅ *INJECT SERVER BERHASIL!*\n\n"
             f"📧 Akun: `{email}`\n"
-            f"💰 Tambahan: `{amount}`\n"
-            f"💵 Total Money Sekarang: `{DATABASE_AKUN[email]['money']}`",
+            f"💵 Total Money di Server: `{DATABASE_AKUN[email]['money']}`\n\n"
+            f"🔗 Data siap disinkronkan ke game.",
             parse_mode="Markdown"
         )
     except Exception as e:
