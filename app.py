@@ -3,30 +3,27 @@ import telebot
 
 app = Flask(__name__)
 
-# Token Bot Telegram kamu
+# Token Bot Telegram kamu yang baru
 TELEGRAM_BOT_TOKEN = "8903996033:AAFjq32aNVAnRbPy-51ufNWGwIaxntKTVKo"
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN, threaded=False)
 
 # Database Sederhana di Server
 DATABASE_AKUN = {}
-VALID_KEYS = {
-    "DYLUX-VIP-GROOT": {"tier": "premium"}
-}
 
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"status": "online", "service": "Dylux Telegram Webhook Engine"})
 
-# Endpoint Webhook Telegram (Pesan dari Telegram akan dikirim ke sini secara otomatis)
+# Endpoint Webhook utama yang lebih aman
 @app.route(f'/{TELEGRAM_BOT_TOKEN}', methods=['POST'])
-def receive_telegram_webhook():
+def webhook():
     if request.headers.get('content-type') == 'application/json':
-        json_string = request.get_data().decode('utf-8')
-        update = telebot.types.Update.de_json(json_string)
+        json_data = request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_data)
         bot.process_new_updates([update])
         return '', 200
     else:
-        return '', 403
+        return 'Forbidden', 403
 
 # --- FITUR BOT TELEGRAM ---
 @bot.message_handler(commands=['start'])
@@ -34,8 +31,8 @@ def send_welcome(message):
     bot.reply_to(message, 
         "🤖 *Selamat datang di Dylux Bot!*\n\n"
         "Gunakan perintah berikut untuk mulai:\n"
-        "/inject <email> <jumlah_money> - Untuk inject uang\n"
-        "Contoh: `/inject emailku@gmail.com 5000000`", 
+        "`/inject <email> <jumlah_money>`\n"
+        "Contoh: `/inject azizi177@gmail.com 5000000`", 
         parse_mode="Markdown"
     )
 
